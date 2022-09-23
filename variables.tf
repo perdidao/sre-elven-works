@@ -39,7 +39,7 @@ variable "db_user" {
 }
 
 variable "db_pass" {
-  default = "9AmG8rlE5yP7CB59"
+  default = "!v91P80N1kM$F2wYnvbkMaK"
 }
 
 variable "ssh_key_path" {

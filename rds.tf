@@ -8,8 +8,8 @@ resource "aws_db_instance" "default" {
   engine_version         = "5.7"
 
   identifier             = "rds${var.default_suffix}"
-  username               = "superadmin"
-  password               = "!v91P80N1kM$F2wYnvbkMaK"
+  username               = var.db_user
+  password               = var.db_pass
 
   skip_final_snapshot    = true
   publicly_accessible    = false

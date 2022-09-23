@@ -1,5 +1,0 @@
-db_host: "rds-estudos-perdidao.csjpovndf8tk.us-west-2.rds.amazonaws.com"
-db_port: "3306"
-db_name: "blog"
-db_user: "blog_owner"
-db_password: "9AmG8rlE5yP7CB59"
