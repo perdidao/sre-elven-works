@@ -1,0 +1,19 @@
+---
+  - name: Update the software package repository
+    command: yum update -y
+
+  - name: Install mysql
+    yum:
+      state: present
+      name:
+        - mysql
+        - MySQL-python
+
+  - name: "Create {{ db_name }} database"
+    mysql_db:
+      name: "{{ db_name }}"
+      login_host: "{{ db_host }}"
+      login_port: "{{ db_port }}"
+      login_user: "{{ db_user }}"
+      login_password: "{{ db_password }}"
+      state: present

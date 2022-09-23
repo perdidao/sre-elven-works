@@ -1,0 +1,77 @@
+---
+  - name: Update the software package repository
+    command: yum update -y
+
+  # nginx
+  - name: Install nginx
+    command: amazon-linux-extras install nginx1 -y
+
+  - name: Setup nginx
+    block:
+      - name: Create blog.conf file
+        copy:
+          src: nginx/blog.conf
+          dest: /etc/nginx/conf.d/blog.conf
+
+      - name: Configure nginx to auto-start
+        command: chkconfig nginx on || systemctl enable nginx.service
+
+      - name: Update nginx.conf file
+        copy:
+          src: nginx/nginx.conf
+          dest: /etc/nginx/nginx.conf
+
+  #php-fpm
+  - name: Install php-fpm
+    command: amazon-linux-extras install php7.4 -y
+
+  - name: Setup php-fpm
+    block:
+      - name: Configure php-fpm to auto-start
+        command: chkconfig php-fpm on
+
+      - name: Update www.conf file
+        copy:
+          src: php-fpm/www.conf
+          dest: /etc/php-fpm.d/www.conf
+
+  # wordpress
+  - name: Create www directory
+    file:
+      path: /var/www/html
+      state: directory
+
+  - name: Download wordpress
+    ansible.builtin.unarchive:
+      src: https://br.wordpress.org/latest-pt_BR.tar.gz
+      dest: /var/www/html/
+      remote_src: yes 
+
+  - name: Wordpress setup
+    block:
+      - name: Rename wordpress directory
+        command: mv /var/www/html/wordpress /var/www/html/blog
+
+      - name: Create wp-config file
+        template:
+          src: wp-config.php.j2
+          dest: /var/www/html/blog/wp-config.php
+
+      - name: Update wordpress directory permissions
+        ansible.builtin.file:
+          path: /var/www/html/blog
+          owner: nginx
+          group: nginx
+          mode: '0755'
+          recurse: yes
+
+  # restart
+  - name: Restart php-fpm
+    service:
+      name: php-fpm
+      state: restarted
+
+  - name: Restart nginx
+    service:
+      name: nginx
+      state: restarted
