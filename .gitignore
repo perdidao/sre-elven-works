@@ -1,3 +1,5 @@
 .terraform
 .DS_Store
 ansible/defaults/variables.yml
+terraform.tfstate
+terraform.tfstate.backup
